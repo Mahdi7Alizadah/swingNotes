@@ -1,0 +1,149 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Anteckningar API",
+      "description": "Notebook API",
+      "version": "1.0.0"
+    },
+    "host": "localhost:3000",
+    "basePath": "/api",
+    "schemes": ["http"],
+    "securityDefinitions": {
+      "BearerAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Use Bearer token to authenticate requests. Format should look like `Bearer 'TOKEN HERE'`"
+      }
+    },
+    "paths": {
+      "/user/signup": {
+        "post": {
+          "description": "Create a user",
+          "tags": ["User"],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "johnA" },
+                  "password": { "type": "string", "example": "password123" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          ],
+          "responses": {
+            "201": { "description": "Created" },
+            "400": { "description": "Bad Request" },
+            "409": { "description": "User already exists" },
+            "500": { "description": "Internal Error" }
+          }
+        }
+      },
+      "/user/login": {
+        "post": {
+          "description": "Log in with a user account",
+          "tags": ["User"],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "johndo" },
+                  "password": { "type": "string", "example": "password123" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          ],
+          "responses": {
+            "200": { "description": "Successful" },
+            "400": { "description": "Bad Request" },
+            "404": { "description": "Username not found" },
+            "500": { "description": "Internal Error" }
+          }
+        }
+      },
+      "/notes": {
+        "get": {
+          "description": "Get all notes",
+          "tags": ["Notes"],
+          "security": [{ "BearerAuth": [] }],
+          "responses": {
+            "200": { "description": "OK" },
+            "401": { "description": "Unauthorized" },
+            "500": { "description": "Internal Error" }
+          }
+        },
+        "post": {
+          "description": "Create a new note",
+          "tags": ["Notes"],
+          "security": [{ "BearerAuth": [] }],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Testing1" },
+                  "text": { "type": "string", "example": "testing1 note..." }
+                },
+                "required": ["title", "text"]
+              }
+            }
+          ],
+          "responses": {
+            "201": { "description": "Note created" },
+            "400": { "description": "Bad Request" },
+            "401": { "description": "Unauthorized" },
+            "500": { "description": "Internal Error" }
+          }
+        },
+        "put": {
+          "description": "Update a note",
+          "tags": ["Notes"],
+          "security": [{ "BearerAuth": [] }],
+          "parameters": [
+            { "name": "id", "in": "query", "type": "string" },
+            {
+              "name": "body",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Updated Title" },
+                  "text": { "type": "string", "example": "Updated note text..." }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": { "description": "Note updated" },
+            "400": { "description": "Bad Request" },
+            "401": { "description": "Unauthorized" },
+            "404": { "description": "Note not found" },
+            "500": { "description": "Internal Error" }
+          }
+        },
+        "delete": {
+          "description": "Delete a note",
+          "tags": ["Notes"],
+          "security": [{ "BearerAuth": [] }],
+          "parameters": [{ "name": "id", "in": "query", "type": "string" }],
+          "responses": {
+            "204": { "description": "No Content" },
+            "401": { "description": "Unauthorized" },
+            "404": { "description": "Note not found" },
+            "500": { "description": "Internal Server Error" }
+          }
+        }
+      }
+    }
+  }
+  
